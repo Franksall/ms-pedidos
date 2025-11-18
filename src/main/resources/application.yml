@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: ms-pedidos
+  profiles:
+    active: dev
+
+
+  config:
+    import: "configserver:http://ms-config-server:8888"

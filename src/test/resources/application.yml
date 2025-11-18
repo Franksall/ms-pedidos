@@ -1,0 +1,30 @@
+# Este archivo (src/test/resources/application.yml)
+# se usa SÓLO cuando se corren las pruebas (./gradlew test)
+
+spring:
+  # Desactiva los servicios Cloud
+  cloud:
+    config:
+      enabled: false
+    discovery:
+      enabled: false
+
+  # --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
+  # Desactiva TODAS las auto-configuraciones de BD (Reactiva y Bloqueante)
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.r2dbc.R2dbcDataAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+
+  # Desactiva la seguridad (para que no busque el issuer-uri)
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: "http://dummy-issuer-for-tests.com"
+      client:
+        provider:
+          our-auth-server:
+            issuer-uri: "http://dummy-issuer-for-tests.com"

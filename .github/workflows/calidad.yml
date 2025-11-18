@@ -1,0 +1,35 @@
+name: Auditoría de Calidad (Jacoco)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. El robot descarga tu código
+    - uses: actions/checkout@v3
+
+    # 2. El robot instala Java 17 (necesario para Spring Boot 3)
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    # 3. Le damos permiso al robot para ejecutar Gradle
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    # 4. ¡LA PRUEBA DE FUEGO! Ejecuta los tests y genera el reporte Jacoco
+    - name: Build with Gradle and Run Jacoco
+      run: ./gradlew test jacocoTestReport build
+    
+    # 5. (Opcional) Te avisa si todo salió bien
+    - name: Mensaje Final
+      if: success()
+      run: echo "¡Felicidades! Tu código pasó todas las pruebas y tiene calidad ARQ."
